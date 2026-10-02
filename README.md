@@ -3,8 +3,8 @@
 One container that gives you a Linux desktop with an AI agent living in it — plus the
 film studio web app your agent works in.
 
-This repository exists for one reason: so the machine can be deployed from a URL,
-in a web panel, without typing commands.
+This repository holds the machine's definition in one place, so the block you paste into
+your hosting panel is always the current one. The same block is printed in your setup guide.
 
 ## What you need
 
@@ -14,14 +14,14 @@ in a web panel, without typing commands.
 
 ## Before you deploy: change one line
 
-Open `docker-compose.yml` and replace this:
+In `docker-compose.yml`, replace this:
 
 ```yaml
 - PASSWORD=CHANGE-ME-BEFORE-DEPLOY
 ```
 
 with your own password. That password unlocks your desktop, so treat it like a
-house key and keep it in your password manager.
+house key and keep it in your password manager. There is no reset email for it.
 
 Optional: `CUSTOM_USER=studio` is the name you sign in with. Leave it as `studio`, or
 change it to something you prefer.
@@ -29,19 +29,23 @@ change it to something you prefer.
 ## Deploy it
 
 1. In your hosting panel, open **VPS → Manage → Docker Manager**.
-2. Click **Compose → Compose from URL**.
-3. Give the project a name (for example `cloud-computer`) and paste the address of this
-   file — the raw link shown at the top of this repository's file view.
-4. Click **Deploy**.
+2. Click **Compose → Compose manually**.
+3. Give the project the name `cloud-computer`.
+4. Select everything already in the editor, then replace it with the whole of
+   `docker-compose.yml` from this repository — with your password change in place.
+5. Click **Deploy**.
 
-Docker downloads the image and starts the machine. Docker Manager shows the project as
-**Running** when it is up.
+Docker downloads the machine image and starts it. **A few minutes, and you do not need to
+watch it.** Your project reports **Running** when the machine is up.
 
 ## What happens on the first start
 
 Nothing needs your attention. In order: the desktop comes up, the film studio starts, and
 the agent installs itself. The agent install takes about **10 minutes** and runs in the
 background.
+
+The machine also asks for your city the first time you sign in to the desktop, and remembers
+it. That is why no time zone is set in this file — one set here would override your answer.
 
 ## How you reach it
 
@@ -52,9 +56,8 @@ which the setup guide walks through.
 ## Updating it later
 
 - To apply a change you made to this file: **Docker Manager → your project → Update**.
-- To pick up a newer machine image: press **Update** again after the image is published,
-  or **Delete** the project and deploy it again. Your data is untouched either way,
-  because it lives in the folders below.
+- To pick up a newer machine image: press **Update** again after a new image is published.
+  Your data is untouched either way, because it lives in the folders below.
 
 ## Where your data lives
 
