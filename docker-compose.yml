@@ -1,0 +1,59 @@
+# =============================================================================
+# Cloud Computer — the machine your AI film studio and your agent run on
+# =============================================================================
+#
+#   >>> CHANGE ONE LINE BEFORE YOU DEPLOY <<<
+#
+#       PASSWORD=CHANGE-ME-BEFORE-DEPLOY        <- put your own password here
+#
+#   (Optional) CUSTOM_USER is the name you sign in with. "studio" is fine.
+#
+# Everything else in this file can stay exactly as it is.
+#
+# What this runs: one Linux desktop (XFCE, streamed to your browser) with the
+# Hermes Agent and the AI film studio inside it.
+#
+# Nothing is exposed on your server's public address: no ports are published.
+# You reach the desktop through the address you set up yourself.
+#
+# First start, in order: the desktop comes up, the studio starts on port 80
+# inside the container, and the agent installs itself in the background
+# (about 10 minutes). There is nothing to watch and nothing to type.
+#
+# Your data lives in the folders beside this file — ./config, ./agent-home and
+# ./shared. They sit on your server, not inside the container, so updating or
+# rebuilding the container does not remove your agent, your conversations or
+# your studio.
+#
+# The clock is deliberately NOT set here: the first time you sign in to the
+# desktop, the machine asks for your city and remembers the answer.
+
+services:
+  cloud:
+    image: ghcr.io/aoio-design/aoiostudios-cloudpc-hermesagent-studio:latest
+    container_name: cloud-computer
+    restart: unless-stopped
+    environment:
+      - PUID=10000
+      - PGID=10000
+      # The name you sign in to the desktop with
+      - CUSTOM_USER=studio
+      # >>> CHANGE THIS LINE BEFORE YOU DEPLOY <<<
+      - PASSWORD=CHANGE-ME-BEFORE-DEPLOY
+      - TITLE=Cloud Computer
+      # Where the agent's own data lives
+      - HERMES_HOME=/agent-home/.hermes
+      # Session-sharing links carry no authentication of their own and grant the
+      # same power as the desktop login, so they stay switched off.
+      - SELKIES_ENABLE_SHARING=false
+    volumes:
+      # The desktop's own settings, and the desktop user's home folder
+      - ./config:/config
+      # The agent: its program, its memory, its skills, and the studio
+      - ./agent-home:/agent-home
+      # A folder the desktop user and the agent can both read and write
+      - ./shared:/shared
+    # The desktop and the browser need more shared memory than the 64 MB default
+    shm_size: 2gb
+    # No ports are published, and no Docker socket is mounted: the desktop user
+    # has sudo inside the container, so the screen is as powerful as root.
