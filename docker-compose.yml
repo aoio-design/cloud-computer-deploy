@@ -2,13 +2,17 @@
 # Cloud Computer — the machine your AI film studio and your agent run on
 # =============================================================================
 #
-#   >>> CHANGE ONE LINE BEFORE YOU DEPLOY <<<
+#   >>> CHANGE THE DESKTOP PASSWORD BEFORE ENABLING THE TUNNEL <<<
 #
-#       PASSWORD=CHANGE-ME-BEFORE-DEPLOY        <- put your own password here
+#       PASSWORD=CHANGE-ME-BEFORE-ENABLING-TUNNEL        <- put your own password here
+#
+#   The tunnel token stays a placeholder until you have created Access apps and
+#   allow policies for both hostnames. Replace it to connect the tunnel while it
+#   has no public hostname routes; add the routes only after the Access gate exists.
 #
 #   (Optional) CUSTOM_USER is the name you sign in with. "studio" is fine.
 #
-# Everything else in this file can stay exactly as it is.
+#   No ports are published. With the placeholder tunnel token, the connector is off.
 #
 # What this runs: one Linux desktop (XFCE, streamed to your browser) with the
 # Hermes Agent and the AI film studio inside it.
@@ -38,14 +42,18 @@ services:
       - PGID=10000
       # The name you sign in to the desktop with
       - CUSTOM_USER=studio
-      # >>> CHANGE THIS LINE BEFORE YOU DEPLOY <<<
-      - PASSWORD=CHANGE-ME-BEFORE-DEPLOY
+      # Change this password before enabling the tunnel.
+      - PASSWORD=CHANGE-ME-BEFORE-ENABLING-TUNNEL
       - TITLE=Cloud Computer
       # Where the agent's own data lives
       - HERMES_HOME=/agent-home/.hermes
       # Session-sharing links carry no authentication of their own and grant the
       # same power as the desktop login, so they stay switched off.
       - SELKIES_ENABLE_SHARING=false
+      # Replace this run token after Access apps/policies exist, while no routes exist.
+      # Add hostname routes only after this connector is healthy and the Access gate is ready.
+      # This is a per-tunnel run token, not a Cloudflare API token.
+      - CLOUDFLARE_TUNNEL_TOKEN=PASTE_YOUR_CLOUDFLARE_TUNNEL_TOKEN_HERE
     volumes:
       # The desktop's own settings, and the desktop user's home folder
       - ./config:/config
