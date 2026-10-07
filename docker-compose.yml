@@ -15,26 +15,29 @@
 #   No ports are published. With the placeholder tunnel token, the connector is off.
 #
 # What this runs: one Linux desktop (XFCE, streamed to your browser) with the
-# Hermes Agent and the AI film studio inside it.
+# Cloudflare connector and this machine's own boot hooks inside it. It does NOT
+# contain an agent: you install Hermes Agent yourself, from the desktop's own
+# terminal, with Nous Research's installer — the install section of your guide
+# walks through it (about 10 minutes, nothing to download to your own computer).
 #
 # Nothing is exposed on your server's public address: no ports are published.
 # You reach the desktop through the address you set up yourself.
 #
-# First start, in order: the desktop comes up, the studio starts on port 80
-# inside the container, and the agent installs itself in the background
-# (about 10 minutes). There is nothing to watch and nothing to type.
+# First start, in order: the desktop comes up. It asks for your city the first
+# time you sign in, and remembers it. Nothing installs itself in the background.
 #
-# Your data lives in the folders beside this file — ./config, ./agent-home and
-# ./shared. They sit on your server, not inside the container, so updating or
-# rebuilding the container does not remove your agent, your conversations or
-# your studio.
+# Your data lives in the folders beside this file — ./config and ./shared. They
+# sit on your server, not inside the container, so updating or rebuilding the
+# container does not remove your agent, your conversations or your studio. Your
+# agent's own home (its program, memory, skills and studio) is ./config/.hermes,
+# created there the first time you install it.
 #
 # The clock is deliberately NOT set here: the first time you sign in to the
 # desktop, the machine asks for your city and remembers the answer.
 
 services:
   cloud:
-    image: ghcr.io/aoio-design/aoiostudios-cloudpc-hermesagent-studio:latest
+    image: ghcr.io/aoio-design/aoiostudios-cloud-computer:latest
     container_name: cloud-computer
     restart: unless-stopped
     environment:
@@ -45,8 +48,6 @@ services:
       # Change this password before enabling the tunnel.
       - PASSWORD=CHANGE-ME-BEFORE-ENABLING-TUNNEL
       - TITLE=Cloud Computer
-      # Where the agent's own data lives
-      - HERMES_HOME=/agent-home/.hermes
       # Session-sharing links carry no authentication of their own and grant the
       # same power as the desktop login, so they stay switched off.
       - SELKIES_ENABLE_SHARING=false
@@ -55,10 +56,9 @@ services:
       # This is a per-tunnel run token, not a Cloudflare API token.
       - CLOUDFLARE_TUNNEL_TOKEN=PASTE_YOUR_CLOUDFLARE_TUNNEL_TOKEN_HERE
     volumes:
-      # The desktop's own settings, and the desktop user's home folder
+      # The desktop's own settings and the desktop user's home folder. After you
+      # install the agent, its home (./config/.hermes) lives in here too.
       - ./config:/config
-      # The agent: its program, its memory, its skills, and the studio
-      - ./agent-home:/agent-home
       # A folder the desktop user and the agent can both read and write
       - ./shared:/shared
     # The desktop and the browser need more shared memory than the 64 MB default

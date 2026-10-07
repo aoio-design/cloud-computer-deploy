@@ -1,7 +1,7 @@
 # Cloud Computer
 
-One container that gives you a Linux desktop with an AI agent living in it — plus the
-film studio web app your agent works in.
+One container that gives you a Linux desktop you reach from your browser — and, once you
+install it, your AI agent living in it with the film studio web app your agent works in.
 
 This repository holds the machine's definition in one place, so the file your hosting panel
 points at is always the current one. The same setup is described in your guide.
@@ -33,7 +33,7 @@ This file ships with a placeholder password, because a file anyone can download 
 yours. Replace it before your machine gets an address:
 
 1. Open your project in Docker Manager and open its **YAML editor**.
-2. Find the line `- PASSWORD=CHANGE-ME-BEFORE-DEPLOY` and put your own password there.
+2. Find the line `- PASSWORD=CHANGE-ME-BEFORE-ENABLING-TUNNEL` and put your own password there.
 3. Optional: the line above it, `- CUSTOM_USER=studio`, is the name you sign in with.
 4. Save it and let Docker apply the change.
 
@@ -45,12 +45,13 @@ anywhere, so there is no hurry — but there is also no reason to wait.
 
 ## What happens on the first start
 
-Nothing needs your attention. In order: the desktop comes up, the film studio starts, and
-the agent installs itself. The agent install takes about **10 minutes** and runs in the
-background.
+Nothing needs your attention, and nothing installs itself. The desktop comes up, and it asks
+for your city the first time you sign in, then remembers it — that is why no time zone is set
+in this file, because one set here would override your answer.
 
-The machine also asks for your city the first time you sign in to the desktop, and remembers
-it. That is why no time zone is set in this file — one set here would override your answer.
+**The agent is not part of this machine image.** You install it yourself, once, from the
+desktop's own terminal, with Nous Research's installer: about **10 minutes**, unattended. The
+install section of your guide has the exact line to paste and the setup questions that follow.
 
 ## How you reach it
 
@@ -66,12 +67,11 @@ which the setup guide walks through.
 
 ## Where your data lives
 
-Three folders are created beside this file on your server:
+Two folders are created beside this file on your server:
 
 | Folder | What is in it |
 |---|---|
-| `config` | Your desktop's settings and its home folder |
-| `agent-home` | Your agent: its program, its memory, its skills, and your studio |
+| `config` | Your desktop's settings and its home folder — and, after you install the agent, the agent itself (`config/.hermes`: its program, memory, skills and studio) |
 | `shared` | A folder both the desktop and the agent can use |
 
 These are on your server, not inside the container, so updating or rebuilding the container
