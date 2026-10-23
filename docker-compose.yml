@@ -23,17 +23,14 @@
 # Nothing is exposed on your server's public address: no ports are published.
 # You reach the desktop through the address you set up yourself.
 #
-# First start, in order: the desktop comes up. It asks for your city the first
-# time you sign in, and remembers it. Nothing installs itself in the background.
+# First start, in order: the desktop comes up. Nothing installs itself in the
+# background.
 #
 # Your data lives in the folders beside this file — ./config and ./shared. They
 # sit on your server, not inside the container, so updating or rebuilding the
 # container does not remove your agent, your conversations or your studio. Your
 # agent's own home (its program, memory, skills and studio) is ./config/.hermes,
 # created there the first time you install it.
-#
-# The clock is deliberately NOT set here: the first time you sign in to the
-# desktop, the machine asks for your city and remembers the answer.
 
 services:
   cloud:
